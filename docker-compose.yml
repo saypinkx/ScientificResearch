@@ -4,6 +4,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: server
+    container_name: server_research
     ports:
       - 3333:3333
