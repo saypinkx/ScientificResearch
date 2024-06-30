@@ -4,10 +4,10 @@
   <title>Загрузка файла</title>
 </head>
 <body>
-
+<link href="{{ url_for('static', path='css/style.css') }}" rel="stylesheet">
   <h1>Загрузка файла</h1>
 
-  <form action="/trajectory" method="post" enctype="multipart/form-data">
+  <form action="/manual" method="post" enctype="multipart/form-data">
     <input type="file" name="file" id="file" multiple>
     <br>
     <button type="submit">Отправить</button>

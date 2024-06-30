@@ -17,3 +17,5 @@ class DataManager:
         inclination = data['inclination']
         azimuth = data['azimuth']
         return md, inclination, azimuth
+
+

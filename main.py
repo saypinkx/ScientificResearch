@@ -1,40 +1,49 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.wsgi import WSGIMiddleware
-from dashboard import dash_app
+from dashboards.manual import dash_app
 import uvicorn
+import os
 from fastapi import File, UploadFile
-from fastapi.responses import RedirectResponse, HTMLResponse
+from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
-from typing import  List
+from typing import List
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 app.mount("/dashboard", WSGIMiddleware(dash_app.server))
 templates = Jinja2Templates(directory="templates")
-import os
+app.mount("/static", StaticFiles(directory="./static"), name='static')
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
 
 templates = Jinja2Templates(directory=base_dir + '/templates')
 
 
-@app.get('/')
-def index():
-    return "Hello"
+# @app.get('/')
+# def index():
+#     return "Hello"
+
 
 def delete_excel_files():
-    folder_path = base_dir+'/data'
+    folder_path = base_dir + '/data'
     filenames = os.listdir(folder_path)
     for filename in filenames:
         if filename.endswith(".xlsx"):
             file_path = os.path.join(folder_path, filename)
             os.remove(file_path)
 
-@app.get("/trajectory")
+
+@app.get("/manual")
+async def get_manual(request: Request):
+    return templates.TemplateResponse("manual.html", {"request": request})
+
+
+@app.get("/")
 async def root(request: Request):
-    return templates.TemplateResponse("base.html", {"request": request})
+    return templates.TemplateResponse("src.html", {"request": request})
 
 
-@app.post("/trajectory", status_code=200)
+@app.post("/manual", status_code=200)
 def get_trajectory(file: List[UploadFile] = File(...)):
     delete_excel_files()
     files = file
@@ -43,7 +52,9 @@ def get_trajectory(file: List[UploadFile] = File(...)):
             content = file.file.read()
             f.write(content)
             f.close()
-    return RedirectResponse(url="/dashboard", status_code=302)
+    return RedirectResponse(url="/dashboard/manual/", status_code=302)
+
+
 # @app.post("/trajectory", status_code=200)
 # def get_trajectory(request: Request):
 #     files = request.files.getlist("files")

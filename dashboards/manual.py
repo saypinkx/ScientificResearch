@@ -9,7 +9,7 @@ from dash.exceptions import PreventUpdate
 import os
 
 dash_app = dash.Dash(__name__,
-                     requests_pathname_prefix='/dashboard/', title='Kaustubh Demo')
+                     requests_pathname_prefix='/dashboard/manual/', title='Kaustubh Demo')
 
 header = dbc.Row(
     dbc.Col(
@@ -53,7 +53,7 @@ def update_output(n_clicks):
     if n_clicks is None:
         raise PreventUpdate
     else:
-        return dcc.Graph(figure=hand.get_trajectory_3D(), id='3d'), dcc.Graph(figure=hand.get_trajectory_xy())
+        return dcc.Graph(figure=hand.get_manual_trajectory_3D(), id='3d'), dcc.Graph(figure=hand.get_manual_trajectory_xy())
 
 
 

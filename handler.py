@@ -10,7 +10,7 @@ class Handler:
         base_dir = os.path.dirname(os.path.abspath(__file__))
         self.folder_path = base_dir + '/data'
 
-    def get_trajectory_3D(self):
+    def get_manual_trajectory_3D(self, true_size):
         filenames = os.listdir(self.folder_path)
         data = []
         for filename in filenames:
@@ -18,10 +18,10 @@ class Handler:
                 file_path = os.path.join(self.folder_path, filename)
                 data.append(self.dater.load_from_excel(file_path))
 
-        fig = self.painter.draw_trajectory_wells(nodes=data, true_size=0)
+        fig = self.painter.draw_trajectory_wells(nodes=data, true_size=true_size)
         return fig
 
-    def get_trajectory_xy(self):
+    def get_manual_trajectory_xy(self):
         filenames = os.listdir(self.folder_path)
         nodes = []
         for filename in filenames:
