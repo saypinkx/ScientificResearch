@@ -41,8 +41,8 @@ async def get_manual(request: Request):
 async def get_j(request: Request):
     return templates.TemplateResponse("j.html", {"request": request})
 
-@app.get("/g")
-async def get_g(request: Request):
+@app.get("/h")
+async def get_h(request: Request):
     return templates.TemplateResponse("g.html", {"request": request})
 @app.get("/v")
 async def get_v(request: Request):
@@ -82,7 +82,7 @@ def get_trajectory_v(md: float = Form(...), x: float = Form(...), y: float = For
     return RedirectResponse(url="/dashboard/v", status_code=302)
 
 
-@app.post("/g", status_code=200)
+@app.post("/h", status_code=200)
 def get_trajectory_g(md: float = Form(...), x: float = Form(...), y: float = Form(...), z: float = Form(...)):
     deleter.delete_excel_type_file(type='v')
     handler.dater.create_data_for_v(x, y, z, md)

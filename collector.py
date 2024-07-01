@@ -16,8 +16,9 @@ class DataManager:
         return data
 
     def create_data_for_j(self, x, y, z, inclination, md_vertical, md_inclined, azimuth, md_angle):
-        one_angle = inclination / 5
-        count_line = inclination / one_angle
+        count_angle = md_angle / 30
+        one_angle =inclination / count_angle
+        count_line = md_angle / 30
         one_line = md_angle / count_line
         data = [dict(md=z, inclination=0, azimuth=0, x=x, y=y, z=z), dict(md=md_vertical+z, inclination=0, azimuth=0)]
         md = md_vertical + z
