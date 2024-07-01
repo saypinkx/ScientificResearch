@@ -9,7 +9,7 @@ from dash.exceptions import PreventUpdate
 import os
 
 dash_app = dash.Dash(__name__,
-                     requests_pathname_prefix='/dashboard/manual/', title='Kaustubh Demo')
+                     requests_pathname_prefix='/dashboard/v/', title='Kaustubh Demo')
 
 header = dbc.Row(
     dbc.Col(
@@ -20,7 +20,7 @@ header = dbc.Row(
     ),
     className="mb-4",
 )
-hand = Handler()
+handler = Handler()
 
 # dash_app.layout = [
 #     html.Div(children='My First App with Data and a Graph'),
@@ -51,17 +51,6 @@ dash_app.layout = html.Div([
 @dash_app.callback(dash.Output('body-div', 'children'), dash.Input('show-secret', 'n_clicks'))
 def update_output(n_clicks):
     if n_clicks is None:
-        return dcc.Graph(figure=hand.get_manual_trajectory_3D(true_size=0), id='3d'), dcc.Graph(figure=hand.get_manual_trajectory_xy())
-
+        return dcc.Graph(figure=handler.get_type_trajectory_3D(true_size=0, type='v'), id='3d'), dcc.Graph(figure=handler.get_type_trajectory_xy(type='v'))
     else:
-        return dcc.Graph(figure=hand.get_manual_trajectory_3D(true_size=1), id='3d'), dcc.Graph(figure=hand.get_manual_trajectory_xy())
-
-
-
-#
-# @dash_app.callback(dash.Output('body-div2', 'children'), dash.Input('xy', 'n_clicks'))
-# def update_output2(n_clicks):
-#     if n_clicks is None:
-#         raise PreventUpdate
-#     else:
-#         return dcc.Graph(figure=hand.get_trajectory_xy())
+        return dcc.Graph(figure=handler.get_type_trajectory_3D(true_size=1, type='v'), id='3d'), dcc.Graph(figure=handler.get_type_trajectory_xy(type='v'))
