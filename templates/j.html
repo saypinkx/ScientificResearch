@@ -13,22 +13,21 @@
 
         <form action="/j" method="POST">
             <div class="form-group">
-                <label for="tvd-vertical">MD вертикального участка:</label>
+                <label for="tvd-vertical">MD вертикального участка [м]:</label>
                 <input type="number" id="tvd-vertical" name="md_vertical" required>
             </div>
             <div class="form-group">
-                <label for="tvd-inclined">MD наклонного участка:</label>
+                <label for="tvd-inclined">MD наклонного участка [м]:</label>
                 <input type="number" id="tvd-inclined" name="md_inclined" required>
-            </div>
-              <div class="form-group">
-                <label for="t-inclined">MD участка набора угла:</label>
-                <input type="number" id="t-inclined" name="md_angle" required>
+                <div class="form-group">
+                <label for="t-inclined">Интенсивность искревления  [<sup>град</sup>/<sub>10м</sub>]:</label>
+                <input type="number" id="t-inclined" name="intensity" required>
             </div>
             <div class="form-group">
-                <label for="inclination">Отклонение (зенитный угол):</label>
+                <label for="inclination">Зенитный угол [град]:</label>
                 <input type="number" id="inclination" name="inclination" required>
              <div class="form-group">
-                <label for="inclination">Азимут (Азимутальный угол):</label>
+                <label for="inclination">Азимутальный угол [град]:</label>
                 <input type="number" id="azimuth" name="azimuth" required>
             </div>
             <div class="form-group">

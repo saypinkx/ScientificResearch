@@ -81,23 +81,22 @@ def get_trajectory(file: List[UploadFile] = File(...)):
 @app.post("/j", status_code=200)
 def get_trajectory_j(md_vertical: float = Form(...), md_inclined: float = Form(...), x: float = Form(...),
                      y: float = Form(...), inclination: float = Form(...), azimuth: float = Form(...),
-                     z: float = Form(...), md_angle: float = Form(...)):
+                     z: float = Form(...), intensity: float = Form(...)):
     deleter.delete_excel_type_file(type='j')
     handler.dater.create_data_for_j(md_inclined=md_inclined, md_vertical=md_vertical, x=x, y=y, z=z,
-                                    inclination=inclination, azimuth=azimuth, md_angle=md_angle)
+                                    inclination=inclination, azimuth=azimuth, intensity=intensity)
     return RedirectResponse(url="/dashboard/j", status_code=302)
 
 
 @app.post("/s", status_code=200)
-def get_trajectory_s(md_vertical: float = Form(...), md_tangent: float = Form(...),
-                     md_drop: float = Form(...), x: float = Form(...),
+def get_trajectory_s(md_vertical: float = Form(...), x: float = Form(...),
                      y: float = Form(...), inclination: float = Form(...), tangent_angle: float = Form(...),
                      azimuth: float = Form(...),
-                     z: float = Form(...), md_angle: float = Form(...)):
+                     z: float = Form(...), md_drop: float = Form(...), intensity_up: float = Form(...), intensity_down: float = Form(...)):
     deleter.delete_excel_type_file(type='s')
     handler.dater.create_data_for_s(md_vertical=md_vertical, x=x, y=y, z=z,
-                                    inclination=inclination, azimuth=azimuth, md_angle=md_angle, md_tangent=md_tangent,
-                                    md_drop=md_drop, tangent_angle=tangent_angle)
+                                    inclination=inclination, azimuth=azimuth, md_drop=md_drop, intensity_up = intensity_up, intensity_down = intensity_down,
+                                     tangent_angle=tangent_angle)
     return RedirectResponse(url="/dashboard/s", status_code=302)
 
 
@@ -109,12 +108,12 @@ def get_trajectory_v(md: float = Form(...), x: float = Form(...), y: float = For
 
 
 @app.post("/h", status_code=200)
-def get_trajectory_h(md_vertical: float = Form(...), md_inclined: float = Form(...), x: float = Form(...),
+def get_trajectory_h(md_vertical: float = Form(...), intensity: float = Form(...), x: float = Form(...),
                      y: float = Form(...), azimuth: float = Form(...),
-                     z: float = Form(...), md_angle: float = Form(...)):
+                     z: float = Form(...), md_inclined: float = Form(...)):
     deleter.delete_excel_type_file(type='h')
-    handler.dater.create_data_for_h(md_inclined=md_inclined, md_vertical=md_vertical, x=x, y=y, z=z, inclination=90,
-                                    azimuth=azimuth, md_angle=md_angle)
+    handler.dater.create_data_for_h(intensity=intensity, md_vertical=md_vertical, x=x, y=y, z=z, inclination=90,
+                                    azimuth=azimuth, md_inclined=md_inclined)
     return RedirectResponse(url="/dashboard/h", status_code=302)
 
 

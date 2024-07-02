@@ -13,32 +13,31 @@
 
         <form action="/s" method="POST">
             <div class="form-group">
-                <label for="tvd-vertical">Hold - прямой участок (md_vertical):</label>
+                <label for="tvd-vertical">MD вертикального участка [м]:</label>
                 <input type="number" id="tvd-vertical" name="md_vertical" required>
             </div>
-            <div class="form-group">
-                <label for="tvd-inclined">Build - набор (md_angle):</label>
-                <input type="number" id="tvd-inclined" name="md_angle" required>
-            </div>
-              <div class="form-group">
-                <label for="t-inclined">Tangent - стабилизация (md_tangent):</label>
-                <input type="number" id="t-inclined" name="md_tangent" required>
-            </div>
-
-              <div class="form-group">
-                <label for="t-inclined2">Drop - сброс (md_drop):</label>
+             <div class="form-group">
+                <label for="t-inclined2">MD участка сброса [м]:</label>
                 <input type="number" id="t-inclined2" name="md_drop" required>
               </div>
             <div class="form-group">
-                <label for="inclination">Отклонение  (зенитный угол):</label>
+                <label for="tvd-inclined">Интенсивность набора угла [<sup>град</sup>/<sub>10м</sub>]:</label>
+                <input type="number" id="tvd-inclined" name="intensity_up" required>
+            </div>
+              <div class="form-group">
+                <label for="t-inclined">Интенсивность стабилизации угла [<sup>град</sup>/<sub>10м</sub>]:</label>
+                <input type="number" id="t-inclined" name="intensity_down" required>
+            </div>
+            <div class="form-group">
+                <label for="inclination">Зенитный угол набора угла [град]:</label>
                 <input type="number" id="inclination" name="inclination" required>
             </div>
                 <div class="form-group">
-                <label for="inclination">Угол стабилизации  (зенитный угол):</label>
+                <label for="inclination">Зенитный угол стабилизации [град]:</label>
                 <input type="number" id="tangent_angle" name="tangent_angle" required>
                     </div>
              <div class="form-group">
-                <label for="inclination">Азимут (Азимутальный угол):</label>
+                <label for="inclination">Азимутальный угол [град]:</label>
                 <input type="number" id="azimuth" name="azimuth" required>
             </div>
             <div class="form-group">
