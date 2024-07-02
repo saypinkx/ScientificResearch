@@ -2,9 +2,61 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Скважины типа J</title>
+  <link href="{{ url_for('static', path='css/j.css') }}" rel="stylesheet">
 </head>
 <body>
+   <div class="container">
+        <h1>Скважины типа J</h1>
+        <p></p>
 
+        <form action="/s" method="POST">
+            <div class="form-group">
+                <label for="tvd-vertical">Hold - прямой участок (md_vertical):</label>
+                <input type="number" id="tvd-vertical" name="md_vertical" required>
+            </div>
+            <div class="form-group">
+                <label for="tvd-inclined">Build - набор (md_angle):</label>
+                <input type="number" id="tvd-inclined" name="md_angle" required>
+            </div>
+              <div class="form-group">
+                <label for="t-inclined">Tangent - стабилизация (md_tangent):</label>
+                <input type="number" id="t-inclined" name="md_tangent" required>
+            </div>
+
+              <div class="form-group">
+                <label for="t-inclined2">Drop - сброс (md_drop):</label>
+                <input type="number" id="t-inclined2" name="md_drop" required>
+              </div>
+            <div class="form-group">
+                <label for="inclination">Отклонение  (зенитный угол):</label>
+                <input type="number" id="inclination" name="inclination" required>
+            </div>
+                <div class="form-group">
+                <label for="inclination">Угол стабилизации  (зенитный угол):</label>
+                <input type="number" id="tangent_angle" name="tangent_angle" required>
+                    </div>
+             <div class="form-group">
+                <label for="inclination">Азимут (Азимутальный угол):</label>
+                <input type="number" id="azimuth" name="azimuth" required>
+            </div>
+            <div class="form-group">
+                <label for="x-coord">Начальные координаты x:</label>
+                <input type="number" id="x-coord" name="x" required>
+            </div>
+            <div class="form-group">
+                <label for="y-coord">Начальные координаты y:</label>
+                <input type="number" id="y-coord" name="y" required>
+            </div>
+            <div class="form-group">
+                <label for="z-coord">Начальные координаты z:</label>
+                <input type="number" id="z-coord" name="z" required>
+            </div>
+            <div class="form-group">
+                <button type="submit">Отправить</button>
+            </div>
+        </form>
+    </div>
 </body>
 </html>

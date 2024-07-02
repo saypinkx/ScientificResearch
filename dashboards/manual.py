@@ -42,21 +42,33 @@ hand = Handler()
 #     return fig
 
 dash_app.layout = html.Div([
-    html.Button('Click here to see the content', id='show-secret'),
+    html.Button('Нажми сюда, чтобы увидеть настоящие размеры', id='show-secret',
+                style={
+                    'backgroundColor': '#4CAF50',  # Зеленый цвет фона
+                    'color': 'white',  # Белый цвет текста
+                    'padding': '15px 32px',  # Отступы
+                    'textAlign': 'center',  # Текст по центру
+                    'textDecoration': 'none',  # Без подчеркивания
+                    'display': 'inline-block',  # Кнопка как в строке
+                    'fontSize': '16px',  # Размер шрифта
+                    'borderRadius': '5px',  # Закругленные углы
+                    'border': 'none',
+                    'cursor': 'pointer'}),
     html.Div(id='body-div'),
     # html.Button('Click here to see the content', id='xy'),
-    html.Div(id='body-div2')
-])
+
+], style={'textAlign': 'center'})
+
 
 @dash_app.callback(dash.Output('body-div', 'children'), dash.Input('show-secret', 'n_clicks'))
 def update_output(n_clicks):
     if n_clicks is None:
-        return dcc.Graph(figure=hand.get_manual_trajectory_3D(true_size=0), id='3d'), dcc.Graph(figure=hand.get_manual_trajectory_xy())
+        return dcc.Graph(figure=hand.get_manual_trajectory_3D(true_size=0), id='3d'), dcc.Graph(
+            figure=hand.get_manual_trajectory_xy())
 
     else:
-        return dcc.Graph(figure=hand.get_manual_trajectory_3D(true_size=1), id='3d'), dcc.Graph(figure=hand.get_manual_trajectory_xy())
-
-
+        return dcc.Graph(figure=hand.get_manual_trajectory_3D(true_size=1), id='3d'), dcc.Graph(
+            figure=hand.get_manual_trajectory_xy())
 
 #
 # @dash_app.callback(dash.Output('body-div2', 'children'), dash.Input('xy', 'n_clicks'))

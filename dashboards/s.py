@@ -10,8 +10,9 @@ import os
 import base64
 from io import BytesIO
 from dashboards.h import layout
+
 dash_app = dash.Dash(__name__,
-                     requests_pathname_prefix='/dashboard/j/', title='Kaustubh Demo')
+                     requests_pathname_prefix='/dashboard/s/', title='Kaustubh Demo')
 
 header = dbc.Row(
     dbc.Col(
@@ -23,17 +24,17 @@ header = dbc.Row(
     className="mb-4",
 )
 handler = Handler()
+dash_app.layout= layout
 
-dash_app.layout = layout
 
 @dash_app.callback(dash.Output('body-div', 'children'), dash.Input('show-secret', 'n_clicks'))
 def update_output(n_clicks):
     if n_clicks is None:
-        return dcc.Graph(figure=handler.get_type_trajectory_3D(true_size=0, type='j'), id='3d'), dcc.Graph(
-            figure=handler.get_type_trajectory_xy(type='j'))
+        return dcc.Graph(figure=handler.get_type_trajectory_3D(true_size=0, type='s'), id='3d'), dcc.Graph(
+            figure=handler.get_type_trajectory_xy(type='s'))
     else:
-        return dcc.Graph(figure=handler.get_type_trajectory_3D(true_size=1, type='j'), id='3d'), dcc.Graph(
-            figure=handler.get_type_trajectory_xy(type='j'))
+        return dcc.Graph(figure=handler.get_type_trajectory_3D(true_size=1, type='s'), id='3d'), dcc.Graph(
+            figure=handler.get_type_trajectory_xy(type='s'))
 
 
 
@@ -45,8 +46,8 @@ def update_output(n_clicks):
 def update_download(n_clicks):
     # base64_data = handler.get_excel(type='j')
     if n_clicks > 0:
-        df = handler.get_dataframe(type='j')
-        return dcc.send_data_frame(df.to_excel, filename="j.xlsx", index=False
+        df = handler.get_dataframe(type='s')
+        return dcc.send_data_frame(df.to_excel, filename="s.xlsx", index=False
                                    )
     return None
 

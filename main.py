@@ -3,6 +3,8 @@ from fastapi.middleware.wsgi import WSGIMiddleware
 from dashboards.manual import dash_app
 from dashboards.j import dash_app as j_app
 from dashboards.v import dash_app as v_app
+from dashboards.h import dash_app as h_app
+from dashboards.s import dash_app as s_app
 import uvicorn
 import os
 from fastapi import File, UploadFile, Body
@@ -19,6 +21,8 @@ app = FastAPI()
 app.mount("/dashboard/manual", WSGIMiddleware(dash_app.server))
 app.mount("/dashboard/j", WSGIMiddleware(j_app.server))
 app.mount("/dashboard/v", WSGIMiddleware(v_app.server))
+app.mount("/dashboard/h", WSGIMiddleware(h_app.server))
+app.mount("/dashboard/s", WSGIMiddleware(s_app.server))
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="./static"), name='static')
 
@@ -41,9 +45,17 @@ async def get_manual(request: Request):
 async def get_j(request: Request):
     return templates.TemplateResponse("j.html", {"request": request})
 
+
+@app.get("/s")
+async def get_j(request: Request):
+    return templates.TemplateResponse("s.html", {"request": request})
+
+
 @app.get("/h")
 async def get_h(request: Request):
-    return templates.TemplateResponse("g.html", {"request": request})
+    return templates.TemplateResponse("h.html", {"request": request})
+
+
 @app.get("/v")
 async def get_v(request: Request):
     return templates.TemplateResponse("v.html", {"request": request})
@@ -71,8 +83,22 @@ def get_trajectory_j(md_vertical: float = Form(...), md_inclined: float = Form(.
                      y: float = Form(...), inclination: float = Form(...), azimuth: float = Form(...),
                      z: float = Form(...), md_angle: float = Form(...)):
     deleter.delete_excel_type_file(type='j')
-    handler.dater.create_data_for_j(md_inclined=md_inclined, md_vertical=md_vertical, x=x, y=y, z=z, inclination=inclination, azimuth=azimuth, md_angle=md_angle)
+    handler.dater.create_data_for_j(md_inclined=md_inclined, md_vertical=md_vertical, x=x, y=y, z=z,
+                                    inclination=inclination, azimuth=azimuth, md_angle=md_angle)
     return RedirectResponse(url="/dashboard/j", status_code=302)
+
+
+@app.post("/s", status_code=200)
+def get_trajectory_s(md_vertical: float = Form(...), md_tangent: float = Form(...),
+                     md_drop: float = Form(...), x: float = Form(...),
+                     y: float = Form(...), inclination: float = Form(...), tangent_angle: float = Form(...),
+                     azimuth: float = Form(...),
+                     z: float = Form(...), md_angle: float = Form(...)):
+    deleter.delete_excel_type_file(type='s')
+    handler.dater.create_data_for_s(md_vertical=md_vertical, x=x, y=y, z=z,
+                                    inclination=inclination, azimuth=azimuth, md_angle=md_angle, md_tangent=md_tangent,
+                                    md_drop=md_drop, tangent_angle=tangent_angle)
+    return RedirectResponse(url="/dashboard/s", status_code=302)
 
 
 @app.post("/v", status_code=200)
@@ -83,10 +109,13 @@ def get_trajectory_v(md: float = Form(...), x: float = Form(...), y: float = For
 
 
 @app.post("/h", status_code=200)
-def get_trajectory_g(md: float = Form(...), x: float = Form(...), y: float = Form(...), z: float = Form(...)):
-    deleter.delete_excel_type_file(type='v')
-    handler.dater.create_data_for_v(x, y, z, md)
-    return RedirectResponse(url="/dashboard/v", status_code=302)
+def get_trajectory_h(md_vertical: float = Form(...), md_inclined: float = Form(...), x: float = Form(...),
+                     y: float = Form(...), azimuth: float = Form(...),
+                     z: float = Form(...), md_angle: float = Form(...)):
+    deleter.delete_excel_type_file(type='h')
+    handler.dater.create_data_for_h(md_inclined=md_inclined, md_vertical=md_vertical, x=x, y=y, z=z, inclination=90,
+                                    azimuth=azimuth, md_angle=md_angle)
+    return RedirectResponse(url="/dashboard/h", status_code=302)
 
 
 # @app.post("/trajectory", status_code=200)

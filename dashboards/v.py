@@ -7,7 +7,7 @@ from collector import DataManager
 from handler import Handler
 from dash.exceptions import PreventUpdate
 import os
-
+from dashboards.h import layout
 dash_app = dash.Dash(__name__,
                      requests_pathname_prefix='/dashboard/v/', title='Kaustubh Demo')
 
@@ -41,16 +41,28 @@ handler = Handler()
 #     fig = dcc.Graph(figure=hand.get_fig_3D(), id='3d')
 #     return fig
 
-dash_app.layout = html.Div([
-    html.Button('Click here to see the content', id='show-secret'),
-    html.Div(id='body-div'),
-    # html.Button('Click here to see the content', id='xy'),
-    html.Div(id='body-div2')
-])
+dash_app.layout = layout
+
 
 @dash_app.callback(dash.Output('body-div', 'children'), dash.Input('show-secret', 'n_clicks'))
 def update_output(n_clicks):
     if n_clicks is None:
-        return dcc.Graph(figure=handler.get_type_trajectory_3D(true_size=0, type='v'), id='3d'), dcc.Graph(figure=handler.get_type_trajectory_xy(type='v'))
+        return dcc.Graph(figure=handler.get_type_trajectory_3D(true_size=0, type='v'), id='3d'), dcc.Graph(
+            figure=handler.get_type_trajectory_xy(type='v'))
     else:
-        return dcc.Graph(figure=handler.get_type_trajectory_3D(true_size=1, type='v'), id='3d'), dcc.Graph(figure=handler.get_type_trajectory_xy(type='v'))
+        return dcc.Graph(figure=handler.get_type_trajectory_3D(true_size=1, type='v'), id='3d'), dcc.Graph(
+            figure=handler.get_type_trajectory_xy(type='v'))
+
+
+@dash_app.callback(
+    dash.Output("download-excel", "data"),
+    [dash.Input('download-button', 'n_clicks')],
+    prevent_initial_call=True
+)
+def update_download(n_clicks):
+    # base64_data = handler.get_excel(type='j')
+    if n_clicks > 0:
+        df = handler.get_dataframe(type='v')
+        return dcc.send_data_frame(df.to_excel, filename="v.xlsx", index=False
+                                   )
+    return None
