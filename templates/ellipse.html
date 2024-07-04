@@ -3,25 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Скважины типа M</title>
+    <title>Эллипс неопределенности</title>
     <link href="{{ url_for('static', path='css/manual.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', path='css/j.css') }}" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <h1>Скважины типа M</h1>
-        <p>Скважины типа M (manual) строятся на основе данных инклинометрии.</p>
+        <h1>Построение эллипса неопределенности </h1>
 
         <h2>Инструкция:</h2>
         <ol>
-            <ul>Загрузите файл(ы) в формате xlsx с следующими параметрами первой строки:</ul>
+
+            <ul>Введите данные форму и загрузите файл в формате xlsx с следующими параметрами первой строки:</ul>
+
             <ul>
                 <b>inclination</b> - зенитный угол <br>
                 <b>azimuth</b> - азимутальный угол <br>
                 <b>md</b> - длина скважины по оси <br>
-                <b> correlation </b> - Корреляция <br>
-                   <b> d_azimuth </b> - Стандартное отклонение по азимутальному углу<br>
-                 <b> d_inclination </b> - Стандартное отклонение по зенитному углу<br>
-                 <b> md_ellipse </b> - Md, где необходимо вычислить эллипс неопределенности<br>
+                <b>x, y, z</b> - начальные координаты <br>
             </ul>
         </ol>
 
@@ -31,18 +30,16 @@
                     <th>inclination</th>
                     <th>azimuth</th>
                     <th>md</th>
-                    <th>correlation</th>
-                    <th>d_azimuth</th>
-                    <th>d_inclination</th>
-                    <th>md_ellipse</th>
+                     <th>x</th>
+                     <th>y</th>
+                     <th>z</th>
                 </tr>
             <tr>
                     <th>...</th>
                     <th>...</th>
                     <th>...</th>
-                      <th>...</th>
-                  <th>...</th>
-                  <th>...</th>
+                   <th>...</th>
+                   <th>...</th>
                    <th>...</th>
                 </tr>
             </thead>
@@ -50,10 +47,27 @@
                 <!-- Данные будут добавлены динамически -->
             </tbody>
         </table>
-
         <form method="POST" action="/ellipse" enctype="multipart/form-data">
-            <input type="file" name="file" id="fileInput" accept=".xlsx" >
+            <div class="form-group">
+                <label for="tvd1-vertical">Корреляция азимутального и зенитного углов:</label>
+                <input type="number" id="tvd1-vertical" name="correlation" required>
+            </div>
+            <div class="form-group">
+                <label for="tvd2-vertical">Стандартное отклонение азимутального угла:</label>
+                <input type="number" id="tvd2-vertical" name="d_azimuth" required>
+            </div>
+            <div class="form-group">
+                <label for="tvd3-vertical">Стандартное отклонение зенитного угла:</label>
+                <input type="number" id="tvd3-vertical" name="d_inclination" required>
+            </div>
+             <div class="form-group">
+                <label for="tvd3-vertical">Длина (md), на которой необходимо определить эллипс неопределенности:</label>
+                <input type="number" id="tvd4-vertical" name="md_ellipse" required>
+            </div>
+            <div class="form-group2">
+            <input type="file" name="file" id="fileInput" accept=".xlsx">
             <button type="submit">Отправить</button>
+                  </div>
         </form>
     </div>
 </body>

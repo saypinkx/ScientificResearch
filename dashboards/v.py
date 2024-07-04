@@ -9,7 +9,7 @@ from dash.exceptions import PreventUpdate
 import os
 from dashboards.h import layout
 dash_app = dash.Dash(__name__,
-                     requests_pathname_prefix='/dashboard/v/', title='Kaustubh Demo')
+                     requests_pathname_prefix='/dashboard/v/', title='V')
 
 header = dbc.Row(
     dbc.Col(

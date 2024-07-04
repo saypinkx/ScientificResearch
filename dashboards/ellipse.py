@@ -11,7 +11,7 @@ import base64
 from io import BytesIO
 
 dash_app = dash.Dash(__name__,
-                     requests_pathname_prefix='/dashboard/ellipse/', title='Kaustubh Demo')
+                     requests_pathname_prefix='/dashboard/ellipse/', title='Ellipse')
 
 header = dbc.Row(
     dbc.Col(

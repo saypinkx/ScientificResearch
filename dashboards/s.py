@@ -12,7 +12,7 @@ from io import BytesIO
 from dashboards.h import layout
 
 dash_app = dash.Dash(__name__,
-                     requests_pathname_prefix='/dashboard/s/', title='Kaustubh Demo')
+                     requests_pathname_prefix='/dashboard/s/', title='S')
 
 header = dbc.Row(
     dbc.Col(

@@ -68,13 +68,18 @@ class DataManager:
         for i in range(1, int(count_line_tangent + 1)):
             md += one_line_tangent
             data.append(dict(md=md, inclination=inclination - i * intensity_down, azimuth=azimuth))
-        data.append(dict(md=md+md_drop, inclination=0, azimuth=azimuth))
+        data.append(dict(md=md + md_drop, inclination=0, azimuth=azimuth))
         df = pd.DataFrame(data)
         df.to_excel(f"{self.base_dir}/types/s.xlsx", index=False)
 
-    def create_data_for_ellipse(self, file):
-        pass
+    def create_data_for_ellipse(self, md_ellipse, d_azimuth, d_inclination, correlation):
+        df = self.load_from_excel(f"{self.base_dir}/types/ellipse.xlsx")
+        df['d_azimuth'] = pd.Series([d_azimuth])
+        df['d_inclination'] = pd.Series([d_inclination])
+        df['correlation'] = pd.Series([correlation])
+        df['md_ellipse'] = pd.Series([md_ellipse])
 
+        df.to_excel(f"{self.base_dir}/types/ellipse.xlsx", index=False)
 
     def handler(self, data: pd.DataFrame):
         md = data['md']

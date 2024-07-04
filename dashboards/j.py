@@ -11,7 +11,7 @@ import base64
 from io import BytesIO
 from dashboards.h import layout
 dash_app = dash.Dash(__name__,
-                     requests_pathname_prefix='/dashboard/j/', title='Kaustubh Demo')
+                     requests_pathname_prefix='/dashboard/j/', title='J')
 
 header = dbc.Row(
     dbc.Col(
