@@ -5,6 +5,7 @@ from dashboards.j import dash_app as j_app
 from dashboards.v import dash_app as v_app
 from dashboards.h import dash_app as h_app
 from dashboards.s import dash_app as s_app
+from dashboards.ellipse import dash_app as ellipse_app
 import uvicorn
 import os
 from fastapi import File, UploadFile, Body
@@ -23,6 +24,7 @@ app.mount("/dashboard/j", WSGIMiddleware(j_app.server))
 app.mount("/dashboard/v", WSGIMiddleware(v_app.server))
 app.mount("/dashboard/h", WSGIMiddleware(h_app.server))
 app.mount("/dashboard/s", WSGIMiddleware(s_app.server))
+app.mount("/dashboard/ellipse", WSGIMiddleware(ellipse_app.server))
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="./static"), name='static')
 
@@ -46,6 +48,11 @@ async def get_j(request: Request):
     return templates.TemplateResponse("j.html", {"request": request})
 
 
+@app.get("/ellipse")
+async def get_ellipse(request: Request):
+    return templates.TemplateResponse("ellipse.html", {"request": request})
+
+
 @app.get("/s")
 async def get_j(request: Request):
     return templates.TemplateResponse("s.html", {"request": request})
@@ -64,6 +71,16 @@ async def get_v(request: Request):
 @app.get("/")
 async def root(request: Request):
     return templates.TemplateResponse("src.html", {"request": request})
+
+
+@app.post("/ellipse", status_code=200)
+def get_ellipse(file: UploadFile = File(...)):
+    deleter.delete_excel_type_file(type='ellipse')
+    with open(f'types/ellipse.xlsx', 'wb') as f:
+        content = file.file.read()
+        f.write(content)
+        f.close()
+    return RedirectResponse(url="/dashboard/ellipse", status_code=302)
 
 
 @app.post("/manual", status_code=200)
@@ -92,11 +109,13 @@ def get_trajectory_j(md_vertical: float = Form(...), md_inclined: float = Form(.
 def get_trajectory_s(md_vertical: float = Form(...), x: float = Form(...),
                      y: float = Form(...), inclination: float = Form(...), tangent_angle: float = Form(...),
                      azimuth: float = Form(...),
-                     z: float = Form(...), md_drop: float = Form(...), intensity_up: float = Form(...), intensity_down: float = Form(...)):
+                     z: float = Form(...), md_drop: float = Form(...), intensity_up: float = Form(...),
+                     intensity_down: float = Form(...)):
     deleter.delete_excel_type_file(type='s')
     handler.dater.create_data_for_s(md_vertical=md_vertical, x=x, y=y, z=z,
-                                    inclination=inclination, azimuth=azimuth, md_drop=md_drop, intensity_up = intensity_up, intensity_down = intensity_down,
-                                     tangent_angle=tangent_angle)
+                                    inclination=inclination, azimuth=azimuth, md_drop=md_drop,
+                                    intensity_up=intensity_up, intensity_down=intensity_down,
+                                    tangent_angle=tangent_angle)
     return RedirectResponse(url="/dashboard/s", status_code=302)
 
 

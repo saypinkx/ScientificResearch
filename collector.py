@@ -55,11 +55,11 @@ class DataManager:
                           azimuth: float, z: float, intensity_down: float):
         count_angle_inclination = inclination / intensity_up
         count_line_inclination = count_angle_inclination
-        one_line_Inclination = 10
+        one_line_inclination = 10
         data = [dict(md=z, inclination=0, azimuth=0, x=x, y=y, z=z), dict(md=md_vertical + z, inclination=0, azimuth=0)]
         md = md_vertical + z
         for i in range(1, int(count_line_inclination + 1)):
-            md += one_line_Inclination
+            md += one_line_inclination
             data.append(dict(md=md, inclination=i * intensity_up, azimuth=azimuth))
 
         count_angle_tangent = tangent_angle / intensity_up
@@ -71,6 +71,10 @@ class DataManager:
         data.append(dict(md=md+md_drop, inclination=0, azimuth=azimuth))
         df = pd.DataFrame(data)
         df.to_excel(f"{self.base_dir}/types/s.xlsx", index=False)
+
+    def create_data_for_ellipse(self, file):
+        pass
+
 
     def handler(self, data: pd.DataFrame):
         md = data['md']

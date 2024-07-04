@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Скважины типа M</title>
+    <link href="{{ url_for('static', path='css/manual.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Скважины типа M</h1>
+        <p>Скважины типа M (manual) строятся на основе данных инклинометрии.</p>
+
+        <h2>Инструкция:</h2>
+        <ol>
+            <ul>Загрузите файл(ы) в формате xlsx с следующими параметрами первой строки:</ul>
+            <ul>
+                <b>inclination</b> - зенитный угол <br>
+                <b>azimuth</b> - азимутальный угол <br>
+                <b>md</b> - длина скважины по оси <br>
+                <b> correlation </b> - Корреляция <br>
+                   <b> d_azimuth </b> - Стандартное отклонение по азимутальному углу<br>
+                 <b> d_inclination </b> - Стандартное отклонение по зенитному углу<br>
+                 <b> md_ellipse </b> - Md, где необходимо вычислить эллипс неопределенности<br>
+            </ul>
+        </ol>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>inclination</th>
+                    <th>azimuth</th>
+                    <th>md</th>
+                    <th>correlation</th>
+                    <th>d_azimuth</th>
+                    <th>d_inclination</th>
+                    <th>md_ellipse</th>
+                </tr>
+            <tr>
+                    <th>...</th>
+                    <th>...</th>
+                    <th>...</th>
+                      <th>...</th>
+                  <th>...</th>
+                  <th>...</th>
+                   <th>...</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Данные будут добавлены динамически -->
+            </tbody>
+        </table>
+
+        <form method="POST" action="/ellipse" enctype="multipart/form-data">
+            <input type="file" name="file" id="fileInput" accept=".xlsx" >
+            <button type="submit">Отправить</button>
+        </form>
+    </div>
+</body>
+</html>
+
