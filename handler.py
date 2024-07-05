@@ -53,12 +53,19 @@ class Handler:
         df = self.dater.load_from_excel(file=f"{self.base_dir}/types/{type}.xlsx")
         return df
 
-    def get_ellipse_trajectory(self):
+    def get_ellipse_trajectory(self, true_size):
         filepath = f'{self.base_dir}/types/ellipse.xlsx'
         node = self.dater.load_from_excel(filepath)
-        fig = self.painter.draw_trajectory_wells_with_ellipse(data=node, true_size=0)
+        fig = self.painter.draw_trajectory_wells_with_ellipse(data=node, true_size=true_size)
 
         return fig
+
+    def get_ellipse_2D(self):
+        filepath = f'{self.base_dir}/types/ellipse.xlsx'
+        node = self.dater.load_from_excel(filepath)
+        fig = self.painter.draw_ellipse_2D(data=node)
+        return fig
+
 
     # def create_j_trajectory(self, x, y, z, inclination, md_vertical, md_inclined, azimuth):
     #     node = self.dater.create_data_for_j(x, y, md_vertical, md_inclined, inclination, azimuth)

@@ -90,8 +90,11 @@ class PaintManager:
 
     def draw_trajectory_wells_with_ellipse(self, data: pd.DataFrame, true_size: bool):
         x, y, z = self.get_coords(data)
-        x0, y0, x1, y1, md_ellipse, z_otv, vector_n, vector_u, vector_v = self.get_coords_for_ellipse(data)
-        e = self.ellipse(x0=x0, y0=y0, x1=x1, y1=y1, md_ellipse=md_ellipse, z_otv=z_otv, vector_n=vector_n, vector_u=vector_u, vector_v=vector_v)
+        x0, y0, x1, y1, md_ellipse, mean_z, vector_n, vector_u, vector_v, semi_minor_axis, semi_major_axis, mean_x, mean_y = self.get_coords_for_ellipse(
+            data)
+        e = self.ellipse(x0=x0, y0=y0, x1=x1, y1=y1, md_ellipse=md_ellipse, mean_z=mean_z, vector_n=vector_n,
+                         vector_u=vector_u, vector_v=vector_v, semi_minor_axis=semi_minor_axis,
+                         semi_major_axis=semi_major_axis, mean_x=mean_x, mean_y=mean_y)
 
         print(data)
         fig = go.Figure(data=[go.Scatter3d(x=x, y=y, z=z, mode='lines', name='Траектория 1')])
@@ -125,8 +128,9 @@ class PaintManager:
     def get_coords_for_ellipse(self, data: pd.DataFrame):
         md, azimuth, inclination, x_start, y_start, z_start = data['md'], data['azimuth'], data['inclination'], data[
             'x'], data['y'], data['z']
-        d_azimuth, d_inclination, correlation, md_ellipse = data['d_azimuth'], data['d_inclination'], data['correlation'], \
-        data['md_ellipse']
+        d_azimuth, d_inclination, correlation, md_ellipse = data['d_azimuth'], data['d_inclination'], data[
+            'correlation'], \
+            data['md_ellipse']
         azimuth_rad, inclination_rad = np.deg2rad(azimuth), np.deg2rad(inclination)
         d_azimuth, d_inclination = np.deg2rad(d_azimuth)[0], np.deg2rad(d_inclination)[0]
         correlation = correlation[0]
@@ -146,11 +150,11 @@ class PaintManager:
             std_x[i], std_y[i] = std_x[i - 1] + delta_md * np.sin(d_inclination) * np.cos(
                 d_azimuth), std_y[i - 1] + delta_md * np.sin(d_inclination) * np.sin(d_azimuth)
             if md[i] >= md_ellipse:
-                vector_v = np.array([x[i] - x[i-1], y[i] - y[i-1], z[i] - z[i-1]])
+                vector_v = np.array([x[i] - x[i - 1], y[i] - y[i - 1], z[i] - z[i - 1]])
                 vector_u = np.array([0, 1, 0])
 
                 vector_n = np.cross(vector_v, vector_u)
-                z_otv = z[i]
+                mean_z = z[i]
                 mean_x = x[i]
                 mean_y = y[i]
                 std_x = std_x[i]
@@ -164,52 +168,52 @@ class PaintManager:
                 # Определение углов и полуосей эллипса
                 angle = np.degrees(np.arctan2(eigenvectors[1, 0], eigenvectors[0, 0]))
                 semi_major_axis = abs(eigenvalues[0]) ** 0.5
-                semi_minor_axis = eigenvalues[1] ** 0.5
+                semi_minor_axis = abs(eigenvalues[1]) ** 0.5
 
                 x0 = mean_x - semi_major_axis
                 y0 = mean_y - semi_minor_axis
                 x1 = mean_x + semi_major_axis
                 y1 = mean_y + semi_minor_axis
-                return x0, y0, x1, y1, md_ellipse, z_otv, vector_n, vector_u, vector_v
-
+                return x0, y0, x1, y1, md_ellipse, mean_z, vector_n, vector_u, vector_v, semi_minor_axis, semi_major_axis, mean_x, mean_y
         return None
 
-    # def ellipse(self, x0, y0, x1, y1, md_ellipse, z_otv, vector_n, vector_v):
-    #     fig = go.Figure()
-    #
-    #     # Добавление эллипса
-    #     fig.add_shape(
-    #         type="circle",
-    #         xref="x",
-    #         yref="y",
-    #         x0=x0,
-    #         y0=y0,
-    #         x1=x1,
-    #         y1=y1,
-    #         fillcolor="rgba(255, 0, 0, 0.2)",
-    #         line_color="red",
-    #         opacity=0.5,
-    #         name=f"Эллипс неопределенности для md={md_ellipse}",
-    #     )
-    #
-    #
-    #     # Настройка осей
-    #     fig.update_layout(
-    #         xaxis_title="X",
-    #         yaxis_title="Y",
-    #         title="Эллипс неопределенности",
-    #         showlegend=True,
-    #         autosize=False,
-    #         width=600,
-    #         height=400,)
-    #     fig.update_xaxes(range=[x0-10, x1+10])
-    #     fig.update_yaxes(range=[y0-10, y1+10])
-    #     return fig
+    def draw_ellipse_2D(self, data):
+        x0, y0, x1, y1, md_ellipse, mean_z, vector_n, vector_u, vector_v, semi_minor_axis, semi_major_axis, mean_x, mean_y = self.get_coords_for_ellipse(
+            data)
+        fig = go.Figure()
 
-    def ellipse(self, x0, y0, x1, y1, md_ellipse, z_otv, vector_n, vector_u, vector_v):
+        # Добавление эллипса
+        fig.add_shape(
+            type="circle",
+            xref="x",
+            yref="y",
+            x0=x0,
+            y0=y0,
+            x1=x1,
+            y1=y1,
+            fillcolor="rgba(255, 0, 0, 0.2)",
+            line_color="red",
+            opacity=0.5,
+            name=f"Эллипс неопределенности для md={md_ellipse}",
+        )
 
-        a = x1  # Большая полуось
-        b = y1  # Малая полуось
+        # Настройка осей
+        fig.update_layout(
+            xaxis_title="X",
+            yaxis_title="Y",
+            title=f" Дейстивтельные размеры эллипса неопределенности для md={md_ellipse}",
+            showlegend=True,
+            autosize=False,
+            width=600,
+            height=400, )
+        fig.update_xaxes(range=[x0 - 10, x1 + 10])
+        fig.update_yaxes(range=[y0 - 10, y1 + 10])
+        return fig
+
+    def ellipse(self, x0, y0, x1, y1, md_ellipse, mean_z, vector_n, vector_u, vector_v, semi_minor_axis, semi_major_axis, mean_x, mean_y):
+
+        a = semi_major_axis  # Большая полуось
+        b = semi_minor_axis  # Малая полуось
         n = vector_n
         u = vector_u
         v = vector_v
@@ -240,9 +244,9 @@ class PaintManager:
         z_rot = x * R[0, 2] + y * R[1, 2]
 
         # Смещение эллипса в точку P
-        x_rot += x0
-        y_rot += y0
-        z_rot += z_otv
+        x_rot += mean_x
+        y_rot += mean_y
+        z_rot += mean_z
 
         # Построение эллипса
         fig = go.Scatter3d(x=x_rot, y=y_rot, z=z_rot, mode='lines', name='Эллипс неопределенности')

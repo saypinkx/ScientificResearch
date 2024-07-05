@@ -37,15 +37,18 @@ layout = html.Div([
                     'borderRadius': '5px',  # Закругленные углы
                     'border': 'none',
                     'cursor': 'pointer'}),
-    html.Div(id='body-div')])
+    html.Div(id='body-div', style={'textAlign': 'center', 'display': 'flex',
+    'flex-direction': 'column',
+    'align-items': 'center'})])
 
-dash_app.layout =layout
+dash_app.layout = layout
+
 
 @dash_app.callback(dash.Output('body-div', 'children'), dash.Input('show-secret', 'n_clicks'))
 def update_output(n_clicks):
     if n_clicks is None:
-        return dcc.Graph(figure=handler.get_ellipse_trajectory(), id='3d')
+        return dcc.Graph(figure=handler.get_ellipse_trajectory(true_size=0), id='3d'), dcc.Graph(
+            figure=handler.get_ellipse_2D())
     else:
-        return dcc.Graph(figure=handler.get_type_trajectory_3D(true_size=1, type='h'), id='3d'), dcc.Graph(
-            figure=handler.get_type_trajectory_xy(type='h'))
-
+        return dcc.Graph(figure=handler.get_ellipse_trajectory(true_size=1), id='3d'), dcc.Graph(
+            figure=handler.get_ellipse_2D())
