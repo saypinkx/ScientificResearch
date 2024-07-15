@@ -28,14 +28,17 @@ dash_app.layout = layout
 
 @dash_app.callback(dash.Output('body-div', 'children'), dash.Input('show-secret', 'n_clicks'))
 def update_output(n_clicks):
+    xy, xz, yz = handler.get_type_trajectory_2D(type='j')
     if n_clicks is None:
         return dcc.Graph(figure=handler.get_type_trajectory_3D(true_size=0, type='j'), id='3d'), dcc.Graph(
-            figure=handler.get_type_trajectory_xy(type='j'))
+            figure=xy), dcc.Graph(
+            figure=xz), dcc.Graph(
+            figure=yz)
     else:
         return dcc.Graph(figure=handler.get_type_trajectory_3D(true_size=1, type='j'), id='3d'), dcc.Graph(
-            figure=handler.get_type_trajectory_xy(type='j'))
-
-
+            figure=xy), dcc.Graph(
+            figure=xz), dcc.Graph(
+            figure=yz)
 
 @dash_app.callback(
     dash.Output("download-excel", "data"),

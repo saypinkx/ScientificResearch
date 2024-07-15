@@ -73,7 +73,7 @@ class PaintManager:
     #     fig.update_layout(title='Позиция скважины на X-Y плоскости', scene=scene)
     #     return fig
 
-    def draw_position_wells(self, nodes: list):
+    def draw_position_wells_xy(self, nodes: list):
         fig = go.Figure()
         for i in range(len(nodes)):
             node = nodes[i]
@@ -86,6 +86,36 @@ class PaintManager:
         fig.update_yaxes(title_text="Y (м)")
 
         fig.update_layout(title='Позиция скважины на X-Y плоскости')
+        return fig
+
+    def draw_position_wells_yz(self, nodes: list):
+        fig = go.Figure()
+        for i in range(len(nodes)):
+            node = nodes[i]
+            x, y, z = self.get_coords(node)
+            fig.add_trace(
+                go.Scatter(x=y, y=z, name=f'Позиция скважины {i + 1} на Y-Z плоскости', mode='lines+markers'))
+        # scene = dict(xaxis=dict(title='X (м)'),
+        #              yaxis=dict(title='Y (м)'))
+        fig.update_xaxes(title_text="Z (м)")
+        fig.update_yaxes(title_text="Y (м)")
+
+        fig.update_layout(title='Позиция скважины на Y-Z плоскости')
+        return fig
+
+    def draw_position_wells_xz(self, nodes: list):
+        fig = go.Figure()
+        for i in range(len(nodes)):
+            node = nodes[i]
+            x, y, z = self.get_coords(node)
+            fig.add_trace(
+                go.Scatter(x=x, y=z, name=f'Позиция скважины {i + 1} на X-Z плоскости', mode='lines+markers'))
+        # scene = dict(xaxis=dict(title='X (м)'),
+        #              yaxis=dict(title='Y (м)'))
+        fig.update_xaxes(title_text="x (м)")
+        fig.update_yaxes(title_text="z (м)")
+
+        fig.update_layout(title='Позиция скважины на X-Z плоскости')
         return fig
 
     def draw_trajectory_wells_with_ellipse(self, data: pd.DataFrame, true_size: bool):

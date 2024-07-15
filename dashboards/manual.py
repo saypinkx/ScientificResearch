@@ -62,15 +62,18 @@ dash_app.layout = html.Div([
 
 @dash_app.callback(dash.Output('body-div', 'children'), dash.Input('show-secret', 'n_clicks'))
 def update_output(n_clicks):
+    xy, xz, yz = hand.get_manual_trajectory_2D()
     if n_clicks is None:
         return dcc.Graph(figure=hand.get_manual_trajectory_3D(true_size=0), id='3d'), dcc.Graph(
-            figure=hand.get_manual_trajectory_xy())
+            figure=xy), dcc.Graph(
+            figure=xz), dcc.Graph(
+            figure=yz)
 
     else:
         return dcc.Graph(figure=hand.get_manual_trajectory_3D(true_size=1), id='3d'), dcc.Graph(
-            figure=hand.get_manual_trajectory_xy())
-
-#
+            figure=xy), dcc.Graph(
+            figure=xz), dcc.Graph(
+            figure=yz)
 # @dash_app.callback(dash.Output('body-div2', 'children'), dash.Input('xy', 'n_clicks'))
 # def update_output2(n_clicks):
 #     if n_clicks is None:
