@@ -155,7 +155,8 @@ class PaintManager:
             fig.add_trace(
                 go.Scatter(x=x, y=y, name=f'Позиция скважины {i + 1} на X-Y плоскости', mode='lines+markers'))
 
-    def get_coords_for_ellipse(self, data: pd.DataFrame):
+    def get_coords_for_ellipsev1(self, data: pd.DataFrame):
+        # Извлечение координат
         md, azimuth, inclination, x_start, y_start, z_start = data['md'], data['azimuth'], data['inclination'], data[
             'x'], data['y'], data['z']
         d_azimuth, d_inclination, correlation, md_ellipse = data['d_azimuth'], data['d_inclination'], data[
@@ -224,23 +225,24 @@ class PaintManager:
             fillcolor="rgba(255, 0, 0, 0.2)",
             line_color="red",
             opacity=0.5,
-            name=f"Эллипс неопределенности для md={md_ellipse}",
+            name=f"",
         )
 
         # Настройка осей
         fig.update_layout(
             xaxis_title="X",
             yaxis_title="Y",
-            title=f" Дейстивтельные размеры эллипса неопределенности для md={md_ellipse}",
+            title=f"  Размеры эллипса неопределенности на xy",
             showlegend=True,
             autosize=False,
             width=600,
             height=400, )
-        fig.update_xaxes(range=[x0 - 10, x1 + 10])
-        fig.update_yaxes(range=[y0 - 10, y1 + 10])
+        fig.update_xaxes(range=[x0 - x1 // 2, x1 + x1 // 2])
+        fig.update_yaxes(range=[y0 - y1 // 2, y1 + y1 // 2])
         return fig
 
-    def ellipse(self, x0, y0, x1, y1, md_ellipse, mean_z, vector_n, vector_u, vector_v, semi_minor_axis, semi_major_axis, mean_x, mean_y):
+    def ellipse(self, x0, y0, x1, y1, md_ellipse, mean_z, vector_n, vector_u, vector_v, semi_minor_axis,
+                semi_major_axis, mean_x, mean_y):
 
         a = semi_major_axis  # Большая полуось
         b = semi_minor_axis  # Малая полуось
@@ -281,3 +283,53 @@ class PaintManager:
         # Построение эллипса
         fig = go.Scatter3d(x=x_rot, y=y_rot, z=z_rot, mode='lines', name='Эллипс неопределенности')
         return fig
+
+    def get_coords_for_ellipse(self, data: pd.DataFrame):
+        # Извлечение координат
+        md, azimuth, inclination, x_start, y_start, z_start = data['md'], data['azimuth'], data['inclination'], data[
+            'x'], data['y'], data['z']
+        d_azimuth, d_inclination, correlation, md_ellipse = data['d_azimuth'], data['d_inclination'], data[
+            'correlation'], \
+            data['md_ellipse']
+        azimuth_rad, inclination_rad = np.deg2rad(azimuth), np.deg2rad(inclination)
+        d_azimuth, d_inclination = np.deg2rad(d_azimuth)[0], np.deg2rad(d_inclination)[0]
+        correlation = correlation[0]
+        md_ellipse = md_ellipse[0]
+
+        x, y, z, std_x, std_y = np.zeros_like(md), np.zeros_like(md), np.zeros_like(md), np.zeros_like(
+            md), np.zeros_like(md)
+        x[0], y[0], z[0] = x_start[0], y_start[0], z_start[0]
+        count_positions = len(md)
+
+        for i in range(1, count_positions):
+            delta_md = -(md[i] - md[i - 1])
+            delta_x, delta_y, delta_z = delta_md * np.sin(inclination_rad[i]) * np.cos(
+                azimuth_rad[i]), delta_md * np.sin(inclination_rad[i]) * np.sin(azimuth_rad[i]), delta_md * np.cos(
+                inclination_rad[i])
+            x[i], y[i], z[i] = x[i - 1] + delta_x, y[i - 1] + delta_y, z[i - 1] + delta_z
+            d_inclination = ((d_inclination ** 2 * (i + 1))) ** 0.5
+            d_azimuth = ((d_azimuth ** 2 * (i + 1))) ** 0.5
+            std_x[i], std_y[i] = std_x[i - 1] + abs(delta_md * np.sin(d_inclination) * np.cos(
+                d_azimuth)), std_y[i - 1] + abs(delta_md * np.sin(d_inclination) * np.sin(d_azimuth))
+            if md[i] >= md_ellipse:
+                vector_v = np.array([x[i] - x[i - 1], y[i] - y[i - 1], z[i] - z[i - 1]])
+                vector_u = np.array([0, 1, 0])
+
+                vector_n = np.cross(vector_v, vector_u)
+                mean_z = z[i]
+                mean_x = x[i]
+                mean_y = y[i]
+                std_x = std_x[i]
+                std_y = std_y[i]
+
+                # semi_major_axis = mean_x + std_x
+                # semi_minor_axis = mean_y + std_y
+                semi_major_axis = std_x
+                semi_minor_axis = std_y
+
+                x0 = mean_x - semi_major_axis
+                y0 = mean_y - semi_minor_axis
+                x1 = mean_x + semi_major_axis
+                y1 = mean_y + semi_minor_axis
+                return x0, y0, x1, y1, md_ellipse, mean_z, vector_n, vector_u, vector_v, semi_minor_axis, semi_major_axis, mean_x, mean_y
+        return None

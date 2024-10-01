@@ -75,14 +75,14 @@ async def root(request: Request):
 
 @app.post("/ellipse", status_code=200)
 def get_ellipse(file: UploadFile = File(...), d_azimuth: float = Form(), d_inclination: float = Form(),
-                md_ellipse: float = Form(), correlation: float = Form()):
+                md_ellipse: float = Form()):
     deleter.delete_excel_type_file(type='ellipse')
     with open(f'types/ellipse.xlsx', 'wb') as f:
         content = file.file.read()
         f.write(content)
         f.close()
     handler.dater.create_data_for_ellipse(md_ellipse=md_ellipse, d_azimuth=d_azimuth, d_inclination=d_inclination,
-                                          correlation=correlation)
+                                          correlation=0)
     return RedirectResponse(url="/dashboard/ellipse", status_code=302)
 
 
